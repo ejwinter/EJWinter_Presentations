@@ -7,7 +7,8 @@
     "export": "slidev export slides.md"
   },
   "devDependencies": {
-    "@slidev/cli": "^52.14.2"
+    "@slidev/cli": "^52.14.2",
+    "playwright-chromium": "^1.59.1"
   },
   "dependencies": {
     "@slidev/cli": "^52.14.2",
