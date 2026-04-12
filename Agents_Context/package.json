@@ -7,10 +7,10 @@
     "export": "slidev export slides.md"
   },
   "devDependencies": {
-    "@slidev/cli": "^0.49.0",
-    "@slidev/theme-apple-basic": "latest"
+    "@slidev/cli": "^52.14.2"
   },
   "dependencies": {
+    "@slidev/cli": "^52.14.2",
     "@slidev/theme-default": "^0.25.0"
   }
 }

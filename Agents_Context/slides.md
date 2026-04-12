@@ -100,7 +100,7 @@ These agents open files, run terminal commands, edit code across the whole repo,
 
 ---
 
-**But who's keeping it on track?**
+# But who's keeping it on track?
 
 <div class="grid grid-cols-2 gap-6 mt-2">
 <div>
