@@ -916,6 +916,221 @@ so it's consistent every time any engineer on the team runs /status.
 layout: section
 ---
 
+# Case Study: A Product Engineering Team
+
+Carrying the Toolkit Across Projects
+
+---
+
+# The Portable Toolkit
+
+<div class="grid grid-cols-3 gap-6 mt-4">
+<div>
+
+**Constitution**
+- Project-specific stack
+- Directory conventions
+- PR and test workflow
+- Compliance requirements
+
+*Adapts per project*
+
+</div>
+<div>
+
+**Skills**
+- `frontend-design`
+- `angular-architecture`
+- `database-design`
+
+*Authored once, installed everywhere*
+
+</div>
+<div>
+
+**Rules**
+- `functional-spec-codevelopment`
+- `manualtesting-codevelopment`
+
+*Auto-attached by file glob — no per-session setup*
+
+</div>
+</div>
+
+> The constitution adapts. The skills and rules travel unchanged.
+
+<!--
+This is the practical payoff of the whole talk. A team that has invested in skills
+and rules carries their institutional knowledge from project to project without
+re-explaining it. The constitution is the only thing that changes — the agent's
+capabilities and standing orders are already loaded on day one.
+-->
+
+---
+
+# The Project Constitution
+
+One file the agent reads at session start. Every engineer gets the same agent behavior.
+
+```md
+# CLAUDE.md — Inventory Manager
+
+## Stack
+- Frontend: Angular 18 + NgRx + Angular Material
+- Backend: .NET 8 Web API + EF Core  
+- DB: PostgreSQL 16 · Auth: Entra ID (MSAL)
+
+## Standards
+- Components: smart/dumb pattern; no logic in templates
+- State: NgRx feature stores only — no component-local state for shared data
+- API: RESTful; use ProblemDetails for all error responses
+- Schema changes via EF Core migrations only — no manual SQL
+
+## Workflow
+- Branch from `main`; PRs require passing CI and one review
+- Skills installed: frontend-design, angular-architecture, database-design
+- Rules installed: functional-spec-codevelopment, manualtesting-codevelopment
+```
+
+<!--
+The constitution is project-specific but short. It names the stack so the agent
+never defaults to whatever it saw most in training. It names the installed skills
+and rules so the agent knows what to expect. A new engineer can read this and
+know exactly how the team works — that's the bar.
+-->
+
+---
+
+# Skills: Expertise On Demand
+
+<div class="grid grid-cols-3 gap-4 mt-2">
+<div>
+
+**`frontend-design`**
+
+*Trigger: building any UI component, page, or layout*
+
+- Produces accessible, production-quality interfaces
+- Enforces component composition patterns
+- Applies Angular Material conventions
+- Flags UX anti-patterns before code is written
+
+</div>
+<div>
+
+**`angular-architecture`**
+
+*Trigger: creating or modifying Angular modules, components, services, or state*
+
+- Enforces smart/dumb component split
+- Scaffolds NgRx feature stores
+- Applies service layer patterns
+- Flags module boundary violations
+
+</div>
+<div>
+
+**`database-design`**
+
+*Trigger: designing schemas, writing migrations, or modeling data*
+
+- Normalization decisions with rationale
+- Index recommendations
+- Migration safety checks
+- EF Core conventions and override patterns
+
+</div>
+</div>
+
+<!--
+These three skills were authored once and committed to the team's shared skills repo.
+Any engineer who installs the skills gets them on day one. The agent doesn't need to be told
+how to do Angular or database design every session — and more importantly,
+it applies *your team's* approach, not the internet's average approach.
+-->
+
+---
+
+# Rules: Standards That Load Themselves
+
+| Rule | Scope | What it enforces |
+|------|-------|-----------------|
+| **`functional-spec-codevelopment`** | Auto-attached: `docs/functional/**` | A living folder of docs describing *what the system does and why*, co-located with code — the agent keeps them synchronized as the code changes |
+| **`manualtesting-codevelopment`** | Auto-attached: `tests/manual/**`, `*.testplan.md` | Co-authors test plans in parallel with implementation: steps, edge cases, regression checks |
+
+```md
+# Rule: Functional Spec Co-development
+scope: auto-attach
+globs: ["docs/functional/**"]
+
+## Purpose
+`docs/functional/` is the living record of what this system does and why.
+It is co-authored by the agent and kept synchronized with the code at all times.
+
+## Behavior
+- When editing code, check whether a corresponding functional doc exists.
+- If yes: update it to reflect the change. If no: create a stub and prompt the
+  engineer to fill in the "why" before the PR is merged.
+- Functional docs describe behavior and rationale — not implementation details.
+  Those belong in code comments. These belong here.
+```
+
+<!--
+The key insight: this isn't about specs written before coding starts. It's a living
+folder that describes what the system does and why — maintained alongside the code
+rather than abandoned after the first sprint. The rule makes the agent a co-author
+of that documentation automatically. Engineers don't have to remember to update it.
+-->
+
+---
+
+# The Pattern: Adapt the Constitution, Carry the Toolkit
+
+<div class="grid grid-cols-2 gap-8 mt-4">
+<div>
+
+**Stays with the project**
+
+Write once at kickoff, update as the project evolves.
+
+- Stack and library choices
+- Directory conventions
+- PR and deployment workflow
+- Security and compliance rules
+
+</div>
+<div>
+
+**Travels with the team**
+
+Install in minutes. Committed to a shared repo.
+
+- `frontend-design`
+- `angular-architecture`
+- `database-design`
+- `functional-spec-codevelopment`
+- `manualtesting-codevelopment`
+
+</div>
+</div>
+
+```bash
+# New project setup
+npx skills add https://github.com/your-org/agent-skills
+# Write CLAUDE.md for this project — the agent is ready.
+```
+
+<!--
+This is the compounding effect. The first project is expensive — you're writing skills
+and rules from scratch. By the third project, you're spending twenty minutes on a
+constitution and running one command. The agent arrives knowing your team's standards.
+The institutional knowledge is in files, not in people's heads.
+-->
+
+---
+layout: section
+---
+
 # Managing Context
 
 ---
