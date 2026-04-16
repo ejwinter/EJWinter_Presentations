@@ -23,8 +23,8 @@ and the organization contribute to a shared knowledge base.
 
 - The limits of prompt engineering
 - Spec-Driven Development (recap)
-- Constitutions — teaching your AI your standards
-- Memory — context that learns and grows
+- Memory — context that persists and learns
+- Constitutions — encoding your standards proactively
 - Rules — breaking the constitution into focused pieces
 - Skills — reusable AI capabilities you can build and share
 - Commands — automating workflows, not just guiding them
@@ -226,9 +226,107 @@ This is a recap of prior work — tonight we go deeper into what happens around 
 layout: section
 ---
 
+# Memory
+
+Context That Persists Across Sessions
+
+---
+
+# What Memory Is
+
+You've already seen this: mid-session, Claude volunteers —
+
+> "I notice I'm correcting this a lot — I'm going to remember it."
+
+- Claude writes a small Markdown file and reads it back at the start of every future session
+- **Global** (`~/.claude/memory/`) — applies to every project, every conversation
+- **Project** (`.claude/memory/`) — applies to this project only
+- You can ask the agent to remember or forget anything at any time
+
+<!--
+This is the moment most people first notice memory: the agent decides on its own
+to persist something you've corrected. Global memory travels with the engineer —
+preferences, working style, things that should be true everywhere. Project memory
+is scoped to one codebase: decisions, constraints, things specific to this team.
+You don't have to wire any of this up. The agent maintains it.
+-->
+
+---
+
+# The Four Types of Memory
+
+| Type | What it captures | Example |
+|------|-----------------|---------|
+| `user` | Who you are, how you work | "Senior Go engineer, new to React" |
+| `feedback` | Corrections that should stick | "Never mock the database in tests" |
+| `project` | Decisions, motivations, not in git | "Auth rewrite is compliance-driven" |
+| `reference` | Pointers to external systems | "Bugs in Linear project INGEST" |
+
+<!--
+User memories tailor future behavior to your profile. Feedback memories prevent
+the agent from making the same mistake twice. Project memories capture the why
+behind decisions — things git history doesn't know. Reference memories tell the
+agent where to look in external systems.
+-->
+
+---
+
+# TeamFabric: Breadcrumb Memory
+
+No raw content retained. Every interaction leaves a structured, sourced breadcrumb.
+
+```md
+## Entity File Structure
+
+Each entity uses a layered information architecture:
+
+1. **Lightweight header** — cheap to load, identifies relevance
+2. **First-class fields** — curated artifacts maintained through refinement
+3. **Context log** — append-only breadcrumb trail of sourced summaries
+
+### Context Log Entry Format
+
+- YYYY-MM-DD HH:MM - Who (contact) via channel: Summary with reasoning.
+  Source: [reference to original artifact]
+```
+
+<!--
+This is memory at the entity level. The agent never rewrites history — it appends
+breadcrumbs with timestamps, sources, and reasoning. You always know what was said,
+by whom, via what channel, and why. The summary may become stale (flagged) but the
+log is permanent.
+-->
+
+---
+
+# Memory Is Reactive
+
+It captures corrections you've already had to make. Each session starts clean — until a pattern repeats enough that the agent saves it.
+
+**The limitation:** the agent learns from mistakes already made.
+
+**What if you could encode your team's standards before the first mistake?**
+
+| | Memory | Constitution |
+|--|--------|-------------|
+| **Authored by** | The agent, from corrections | Your team, deliberately |
+| **Answers** | What has this agent learned? | How do we always work? |
+| **When you need it** | Correcting the same mistake repeatedly | Re-explaining setup every session |
+
+<!--
+This is the transition. Memory is backward-looking — it captures what went wrong.
+A constitution is forward-looking — it encodes what should go right before the
+first task even begins. You need both: memory handles the organic, personal layer;
+the constitution handles the team's standing orders that should never need a correction.
+-->
+
+---
+layout: section
+---
+
 # Constitutions
 
-Teaching Your AI Your Standards
+The Proactive Version of Memory
 
 ---
 
@@ -368,95 +466,6 @@ The meta mode rules protect structural integrity. The entity structure rules
 define a token-efficient layering: cheap headers for scanning, rich context logs
 for depth. The agent knows exactly how to read and write these without being told
 every session.
--->
-
----
-layout: section
----
-
-# Memory
-
-Context That Learns and Grows
-
----
-
-# What Memory Is
-
-- Structured Markdown files the agent writes and reads across sessions
-- Captures what the agent has learned: preferences, decisions, feedback, external pointers
-- Lives in `.claude/memory/` — loaded selectively, not dumped wholesale
-- Unlike a constitution, you don't author memory directly — the agent maintains it
-
-> "You seem to be correcting me a lot on that I am going to remember this."
-
-<!--
-Constitutions are written by humans and encode what you know in advance.
-Memory is different — it's context the agent accumulates by working with you,
-persisting what it learns so you don't have to repeat yourself across sessions.
--->
-
----
-
-# The Four Types of Memory
-
-| Type | What it captures | Example |
-|------|-----------------|---------|
-| `user` | Who you are, how you work | "Senior Go engineer, new to React" |
-| `feedback` | Corrections that should stick | "Never mock the database in tests" |
-| `project` | Decisions, motivations, not in git | "Auth rewrite is compliance-driven" |
-| `reference` | Pointers to external systems | "Bugs in Linear project INGEST" |
-
-<!--
-User memories tailor future behavior to your profile. Feedback memories prevent
-the agent from making the same mistake twice. Project memories capture the why
-behind decisions — things git history doesn't know. Reference memories tell the
-agent where to look in external systems.
--->
-
----
-
-# Constitution vs. Memory
-
-| | Constitution | Memory |
-|--|-------------|--------|
-| **Authored by** | Human team | Agent |
-| **Reviewed via** | PRs | Your oversight |
-| **Answers** | How do we always work? | What has this agent learned? |
-| **Signal you need it** | Re-explaining setup every session | Correcting the same thing across sessions |
-
-<!--
-A constitution is what you deliberately encode as permanent team standards.
-Memory is what the agent learns organically by working with you.
-The practical effect: a constitution keeps the agent consistent;
-memory keeps the agent from making the same mistake twice.
--->
-
----
-
-# TeamFabric: Breadcrumb Memory
-
-No raw content retained. Every interaction leaves a structured, sourced breadcrumb.
-
-```md
-## Entity File Structure
-
-Each entity uses a layered information architecture:
-
-1. **Lightweight header** — cheap to load, identifies relevance
-2. **First-class fields** — curated artifacts maintained through refinement
-3. **Context log** — append-only breadcrumb trail of sourced summaries
-
-### Context Log Entry Format
-
-- YYYY-MM-DD HH:MM - Who (contact) via channel: Summary with reasoning.
-  Source: [reference to original artifact]
-```
-
-<!--
-This is memory at the entity level — not a session-level memory file, but the same
-principle. The agent never rewrites history. It appends breadcrumbs with timestamps,
-sources, and reasoning. The summary may become stale (flagged) but the log is
-append-only. You always know what was said, by whom, via what channel, and why.
 -->
 
 ---
